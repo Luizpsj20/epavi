@@ -4,6 +4,44 @@ Busca temperatura máxima e probabilidade de chuva de Porto Alegre/RS e
 envia um e-mail com o assunto **"Alerta Operacional Epavi - Clima POA"**.
 
 ---
+## Como o código funciona
+
+O script `clima_poa.py` é dividido em 3 etapas executadas em sequência:
+
+### Etapa 1 — `buscar_clima()`: busca os dados na API
+
+Faz uma requisição HTTP para a **Open-Meteo** (API gratuita, sem cadastro)
+passando as coordenadas de Porto Alegre. A API devolve um JSON com a previsão
+do dia, de onde o código extrai:
+
+| Campo | O que é |
+|---|---|
+| `temperature_2m_max` | Temperatura máxima prevista para o dia (°C) |
+| `temperature_2m_min` | Temperatura mínima prevista para o dia (°C) |
+| `precipitation_probability_max` | Maior probabilidade de chuva do dia (%) |
+| `precipitation_sum` | Total de chuva prevista acumulada (mm) |
+
+> ⚠️ A API fornece **previsão** do dia, não temperatura em tempo real.
+> Para ter a temperatura atual do momento, seria necessária outra API
+> (ex: OpenWeatherMap, que exige cadastro gratuito).
+
+### Etapa 2 — `montar_email()`: formata o conteúdo
+
+Pega os dados da etapa anterior e monta o e-mail em dois formatos:
+- **HTML** — versão visual com cards coloridos (vista na maioria dos clientes de e-mail)
+- **Texto puro** — fallback para clientes que não renderizam HTML
+
+A probabilidade de chuva é classificada automaticamente em:
+- 🟢 **BAIXA** — abaixo de 40%
+- 🟠 **MODERADA** — entre 40% e 70%
+- 🔴 **ALTA** — acima de 70%
+
+### Etapa 3 — `enviar_email()`: envia via SMTP
+
+Conecta no servidor de e-mail (Gmail por padrão), faz login com as
+credenciais configuradas e dispara a mensagem.
+
+---
 
 ## Pré-requisitos
 
