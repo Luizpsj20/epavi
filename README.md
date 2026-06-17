@@ -180,6 +180,10 @@ clima_poa/
 | `sys` | Ler argumentos (`--teste`) | ❌ já vem no Python |
 
 ---
+## Resultado
+
+![Teste do script](resultado_teste.png)
+--
 
 ## Fonte dos dados
 
